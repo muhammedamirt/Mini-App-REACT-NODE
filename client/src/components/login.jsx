@@ -9,7 +9,7 @@ function Login() {
     const [password, setPassword] = useState("")
     const handleLogin = () =>{
         Axios.post(`${user}/login`,{email,password}).then((response)=>{
-            console.log(response);
+            console.log(response.data);
         })
     }
     return (

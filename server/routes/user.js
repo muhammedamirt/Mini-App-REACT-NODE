@@ -7,6 +7,7 @@ res.send("user")
 })
 
 router.post('/login',controller.postLogin)
+
 router.post('/register',controller.postSignup)
 
 module.exports = router

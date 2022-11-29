@@ -2,9 +2,17 @@ const userCollection = require('../models/schema/user')
 
 module.exports={
     postLogin:(req,res)=>{
-        console.log(req.body);
-        userCollection.findOne({email:req.body.email}).then((data)=>{
-            console.log(data);
+        const {email,password} = req.body
+        userCollection.findOne({email}).then((data)=>{
+            if(data){
+                if(password === data.password){
+                    res.send({loggedIn:true}) 
+                }else{
+                    res.send({passwordWorng:true})  
+                }
+            }else{
+                res.send({noUser:true})
+            }
         })
     },
     postSignup:(req,res)=>{
@@ -14,7 +22,7 @@ module.exports={
             email,
             password
         }).then((data)=>{
-            res.send('added')
+            res.send({userSignUpp:true})
         })
     }
 } 
