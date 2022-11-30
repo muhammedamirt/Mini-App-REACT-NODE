@@ -11,6 +11,7 @@
 }
 .profile:hover{
     color: yellow;
+    font-weight: bolder;
 }
 .customNav{
 background-color: rgb(9, 79, 9);

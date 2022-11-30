@@ -1,8 +1,8 @@
 import React from 'react'
 import "./Navbar.css"
-
+import { useNavigate } from "react-router-dom"
 function Navbar() {
-
+    const Navigate = useNavigate()
     return (
         <header>
             <nav className="navbar navbar-expand-lg  customNav">
@@ -19,9 +19,11 @@ function Navbar() {
                         <li className="nav-item">
                             <a className="nav-link barndname" href="!#">Link</a>
                         </li>
-                        
+
                     </ul>
-                    <p className="nav-link profile"><i className="bi bi-person-circle"></i></p>
+                    <p className="nav-link profile" onClick={() => {
+                        Navigate('/userprofile')
+                    }}><i className="bi bi-person-circle"></i></p>
                 </div>
             </nav>
         </header>

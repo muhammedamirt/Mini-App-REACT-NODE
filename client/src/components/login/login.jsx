@@ -1,15 +1,28 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react';
 import Axios from 'axios'
-import {user} from '../API'
+import {userAPI} from '../../API'
+import {AuthContext} from "../../store/authContext"
+import {useNavigate} from 'react-router-dom'
 
 
 function Login() {
+    const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const {setUser,setToken} = useContext(AuthContext)
     const handleLogin = () =>{
-        Axios.post(`${user}/login`,{email,password}).then((response)=>{
+        Axios.post(`${userAPI}/login`,{email,password}).then((response)=>{
             console.log(response.data);
+            if(response.data.auth){
+                let userData = response.data
+                setUser(userData.fullName)
+                setToken(userData.token)
+                console.log(userData);
+                navigate('/')
+            }else{
+                console.log('failed');
+            }   
         })
     }
     return (

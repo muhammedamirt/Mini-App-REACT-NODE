@@ -1,4 +1,5 @@
 const userCollection = require('../models/schema/user')
+const jwt = require('jsonwebtoken')
 
 module.exports={
     postLogin:(req,res)=>{
@@ -6,7 +7,12 @@ module.exports={
         userCollection.findOne({email}).then((data)=>{
             if(data){
                 if(password === data.password){
-                    res.send({loggedIn:true}) 
+                    let response={
+                        id:data._id,
+                        fullName:data.fullName
+                    }
+                    let token = jwt.sign(response,"secretCode",{expiresIn:500})
+                    res.status(200).send({auth:true,token:token,fullName:data.fullName});
                 }else{
                     res.send({passwordWorng:true})  
                 }
@@ -24,5 +30,8 @@ module.exports={
         }).then((data)=>{
             res.send({userSignUpp:true})
         })
+    },
+    getProfile:(req,res)=>{
+        console.log("on profile page");
     }
 } 
