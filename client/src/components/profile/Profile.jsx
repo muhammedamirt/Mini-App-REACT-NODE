@@ -7,7 +7,7 @@ function ProfileCompo() {
             <div className="card p-4">
                 <div className=" image d-flex flex-column justify-content-center align-items-center">
                     <button className="btn btn-secondary">
-                        <img className='profileIMage' src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80" height="100" width="100" /></button>
+                        <img className='profileIMage' src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg" height="100" width="100" /></button>
                     <span className="name mt-3">Eleanor Pena</span>
                     <span className="idd">@eleanorpena</span>
                     <div className="d-flex flex-row justify-content-center align-items-center gap-2">
