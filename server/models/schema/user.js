@@ -11,6 +11,9 @@ const userSchema = Schema({
     },
     password:{
         type:String
+    },
+    image:{
+        type:String
     }
 })
 

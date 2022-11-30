@@ -18,7 +18,7 @@ function Login() {
     const {setUser,setToken} = useContext(AuthContext)
     const handleLogin = () =>{
         Axios.post(`${userAPI}/login`,{email,password},{ withCredentials: true }).then((response)=>{
-            console.log(response.data);
+            // console.log(response.data);
             if(response.data.auth){
                 let userData = response.data
                 setUser(userData.fullName)

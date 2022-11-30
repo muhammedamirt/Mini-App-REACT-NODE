@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: rgb(240, 247, 240)
+    background-color: rgb(240, 247, 240);
 }
 
 .card {
@@ -87,7 +87,10 @@ hr .new1 {
     background-color: #ccc
 }
 
-.profileIMage{
+.profileIMage {
     border-radius: 50px;
-   width: 100px;
+    width: 100px;
+}
+.bgimg{
+    background-image: url('https://img.freepik.com/free-photo/travel-concept-with-landmarks_23-2149153256.jpg?w=2000');
 }

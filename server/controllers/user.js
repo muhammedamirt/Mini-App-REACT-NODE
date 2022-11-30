@@ -7,14 +7,10 @@ module.exports = {
         userCollection.findOne({ email }).then((data) => {
             if (data) {
                 if (password === data.password) {
-                    let response = {
-                        id: data._id,
-                        fullName: data.fullName
-                    }
-                    let token = jwt.sign(response, "secretCode", { expiresIn: 500 })
+                    let token = jwt.sign({ id: data._id }, "secretCode", { expiresIn: 500 })
                     res.cookie("jwt", token, {
                         httpOnly: false,
-                        maxAge: 60*1000,
+                        maxAge: 6000 * 1000,
                     }).status(200).send({ auth: true, token: token, fullName: data.fullName });
                 } else {
                     res.send({ passwordWorng: true })
@@ -29,12 +25,36 @@ module.exports = {
         userCollection.create({
             fullName,
             email,
-            password
+            password,
+            image: "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
         }).then((data) => {
             res.send({ userSignUpp: true })
         })
     },
     getProfile: (req, res) => {
-        console.log("on profile page");
+        const jwtToken = jwt.verify(req.cookies.jwt, "secretCode")
+        const userId = jwtToken.id
+        userCollection.findOne({ _id: userId }).then((data) => {
+            res.status(200).send(data)
+        })
+    },
+    postEditProfile: async (req, res) => {
+        console.log(req.body);
+        const jwtToken = jwt.verify(req.cookies.jwt, "secretCode")
+        const userId = jwtToken.id
+        let user = await userCollection.findOne({ _id: userId })
+        if (!user) {
+            res.status(500).send({ erroe: "no user" })
+        } else {
+            userCollection.updateOne(
+                { _id: userId },
+                {
+                    $set: {
+                        image: req.body.image
+                    }
+                }).then(() => {
+                    res.status(200).send({ changed: true })
+                })
+        }
     }
 } 

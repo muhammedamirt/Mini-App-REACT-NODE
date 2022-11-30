@@ -2,18 +2,31 @@ import React from 'react'
 import { useState } from 'react'
 import "./EditProfile.css"
 import Axios from "axios";
-import { userAPI } from '../../API';
+import { cloudAPI, userAPI } from '../../API';
 
 function EditProfile() {
-const [image, setImage] = useState("")
+    const [image, setImage] = useState("")
 
 
-const handleUpdateProfile = () =>{
-    console.log(image);
-    Axios.post(`${userAPI}/editProfilePhoto`,{image},{withCredentials:true}).then((response)=>{
-        console.log(response);
-    })
-}
+    const handleUpdateProfile = () => {
+        console.log(image);
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', 'kmg91lzv');
+        console.log(formData);
+        let imageUrl = null
+        Axios.post(`https://api.cloudinary.com/v1_1/${cloudAPI}/image/upload`, formData).then(response => {
+            if(response){
+                imageUrl = response.data.secure_url
+                console.log(imageUrl);
+            Axios.post(`${userAPI}/editProfilePhoto`,{ image: imageUrl },{withCredentials:true}).then((res) => {
+                console.log(res.data);
+            })
+            }
+            
+        })
+
+    }
     return (
         <>
             <div className="container bootstrap snippets bootdey">
@@ -22,12 +35,12 @@ const handleUpdateProfile = () =>{
                 <div className="row">
                     <div className="col-md-3">
                         <div className="text-center">
-                            <img src={image ? URL.createObjectURL(image):"https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} className="avatar img-circle img-thumbnail" alt="avatar" />
+                            <img src={image ? URL.createObjectURL(image) : "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} className="avatar img-circle img-thumbnail" alt="avatar" />
 
-                            <input type="file" className="form-control" onChange={(e)=>{
+                            <input type="file" className="form-control" onChange={(e) => {
                                 setImage(e.target.files[0])
-                            }}/>
-                              <button className='custombutton' onClick={handleUpdateProfile}>Update Profile</button>
+                            }} />
+                            <button className='custombutton' onClick={handleUpdateProfile}>Update Profile</button>
                         </div>
                     </div>
 

@@ -13,4 +13,8 @@ router.post('/register',controller.postSignup)
 
 router.get('/userProfile',controller.getProfile)
 
+router.post('/editProfilePhoto',controller.postEditProfile)
+
+
+
 module.exports = router
