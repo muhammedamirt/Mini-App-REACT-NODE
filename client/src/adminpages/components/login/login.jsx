@@ -1,21 +1,34 @@
+import  Axios  from 'axios'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import {useCookies} from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
+import './login.css'
+import { adminAPI } from '../../../API'
 
 
 function AdminLogin() {
     const Navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
     const handleAdminLogin = () =>{
         console.log(email,password);
+        Axios.post(`${adminAPI}/adminLogin`,{email,password},{withCredentials:true}).then(response=>{
+            if(response.data?.auth){
+                Navigate("/adminViewUser")
+            }else{
+
+            }
+        })
     }
 
   
     
   return (
+    <>
+
     <section className="vh-100">
                 <div className="container py-5 h-100">
                     <div className="row d-flex justify-content-center align-items-center h-100">
@@ -40,13 +53,14 @@ function AdminLogin() {
                                         <label className="form-check-label" for="form1Example3"> Remember password </label>
                                     </div>
 
-                                    <button className="btn btn-primary btn-lg btn-block" type="button" onClick={handleAdminLogin}>Login</button>
+                                    <button className="loginButton" type="button" onClick={handleAdminLogin}>Login</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            </>
   )
 }
 

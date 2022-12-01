@@ -1,11 +1,17 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import "./EditProfile.css"
 import Axios from "axios";
 import { cloudAPI, userAPI } from '../../API';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function EditProfile() {
     const [image, setImage] = useState("")
+    const [cookies, setCookie] = useCookies("")
+    const [userData, setUserData] = useState({})
+
+    const navigate = useNavigate()
 
 
     const handleUpdateProfile = () => {
@@ -16,17 +22,33 @@ function EditProfile() {
         console.log(formData);
         let imageUrl = null
         Axios.post(`https://api.cloudinary.com/v1_1/${cloudAPI}/image/upload`, formData).then(response => {
-            if(response){
+            if (response) {
                 imageUrl = response.data.secure_url
                 console.log(imageUrl);
-            Axios.post(`${userAPI}/editProfilePhoto`,{ image: imageUrl },{withCredentials:true}).then((res) => {
-                console.log(res.data);
-            })
+                Axios.post(`${userAPI}/editProfilePhoto`, { image: imageUrl }, { withCredentials: true }).then((res) => {
+                    if(res.data.changed){
+                        navigate('/userprofile')
+                    }else{
+                        console.log(res.data);
+                    }
+                })
             }
-            
+
         })
 
     }
+    useEffect(() => {
+        if (!cookies.jwt) {
+            navigate("/login")
+        }
+        Axios.get(`${userAPI}/userProfile`,{ withCredentials: true }).then((response) => {
+            const { fullName, email, image } = response.data
+            setUserData({ fullName, email, image })
+        }).catch(error=>{
+            console.log(error);
+        })
+    }, [])
+
     return (
         <>
             <div className="container bootstrap snippets bootdey">
@@ -35,7 +57,7 @@ function EditProfile() {
                 <div className="row">
                     <div className="col-md-3">
                         <div className="text-center">
-                            <img src={image ? URL.createObjectURL(image) : "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"} className="avatar img-circle img-thumbnail" alt="avatar" />
+                            <img src={image ? URL.createObjectURL(image) : userData.image} className="avatar img-circle img-thumbnail" alt="avatar" />
 
                             <input type="file" className="form-control" onChange={(e) => {
                                 setImage(e.target.files[0])
@@ -49,27 +71,15 @@ function EditProfile() {
 
                         <form className="form-horizontal" role="form">
                             <div className="form-group">
-                                <label className="col-lg-3 control-label">First name:</label>
+                                <label className="col-lg-3 control-label">Full Name :</label>
                                 <div className="col-lg-8">
-                                    <input className="form-control" type="text" value="dey-dey" />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label className="col-lg-3 control-label">Last name:</label>
-                                <div className="col-lg-8">
-                                    <input className="form-control" type="text" value="bootdey" />
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <label className="col-lg-3 control-label">Company:</label>
-                                <div className="col-lg-8">
-                                    <input className="form-control" type="text" value="" />
+                                    <input className="form-control" type="text" value={userData.fullName}  />
                                 </div>
                             </div>
                             <div className="form-group">
                                 <label className="col-lg-3 control-label">Email:</label>
                                 <div className="col-lg-8">
-                                    <input className="form-control" type="text" value="janesemail@gmail.com" />
+                                    <input className="form-control" type="text" value={userData.email} />
                                 </div>
                             </div>
                         </form>

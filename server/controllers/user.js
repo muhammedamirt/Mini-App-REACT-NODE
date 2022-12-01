@@ -7,10 +7,10 @@ module.exports = {
         userCollection.findOne({ email }).then((data) => {
             if (data) {
                 if (password === data.password) {
-                    let token = jwt.sign({ id: data._id }, "secretCode", { expiresIn: 500 })
+                    let token = jwt.sign({ id: data._id }, "secretCode", { expiresIn: 600 })
                     res.cookie("jwt", token, {
                         httpOnly: false,
-                        maxAge: 6000 * 1000,
+                        maxAge: 600 * 1000,
                     }).status(200).send({ auth: true, token: token, fullName: data.fullName });
                 } else {
                     res.send({ passwordWorng: true })
@@ -28,7 +28,12 @@ module.exports = {
             password,
             image: "https://upload.wikimedia.org/wikipedia/commons/b/bc/Unknown_person.jpg"
         }).then((data) => {
-            res.send({ userSignUpp: true })
+            console.log(data);
+            let token = jwt.sign({ id: data._id }, "secretCode", { expiresIn: 600 })
+            res.cookie("jwt", token, {
+                httpOnly: false,
+                maxAge: 600 * 1000,
+            }).status(200).send({ auth: true, token: token, fullName: data.fullName });
         })
     },
     getProfile: (req, res) => {

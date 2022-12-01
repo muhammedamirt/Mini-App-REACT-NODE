@@ -3,14 +3,21 @@ import './signup.css'
 import { useState } from 'react'
 import Axios from 'axios'
 import {userAPI} from '../../API'
+import {useNavigate} from "react-router-dom"
 
 function Signup() {
+    const navigate = useNavigate()
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const handleSignup = () =>{
-        Axios.post(`${userAPI}/register`,{fullName,email,password}).then((response)=>{
-            console.log(response);
+        Axios.post(`${userAPI}/register`,{fullName,email,password},{withCredentials:true}).then((response)=>{
+            if(response.data.auth){
+                console.log("helo");
+                navigate('/')
+            }else{
+                navigate('/signup')
+            }
         })
     }
   return (
