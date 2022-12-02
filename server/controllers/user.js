@@ -20,8 +20,12 @@ module.exports = {
             }
         })
     },
-    postSignup: (req, res) => {
+    postSignup:async (req, res) => {
         const { fullName, email, password } = req.body
+       let userExistCheck =await userCollection.findOne({email})
+       if(userExistCheck){
+        res.send({emailExist:true})
+       }else{
         userCollection.create({
             fullName,
             email,
@@ -35,6 +39,8 @@ module.exports = {
                 maxAge: 600 * 1000,
             }).status(200).send({ auth: true, token: token, fullName: data.fullName });
         })
+       }
+        
     },
     getProfile: (req, res) => {
         const jwtToken = jwt.verify(req.cookies.jwt, "secretCode")
@@ -44,7 +50,6 @@ module.exports = {
         })
     },
     postEditProfile: async (req, res) => {
-        console.log(req.body);
         const jwtToken = jwt.verify(req.cookies.jwt, "secretCode")
         const userId = jwtToken.id
         let user = await userCollection.findOne({ _id: userId })

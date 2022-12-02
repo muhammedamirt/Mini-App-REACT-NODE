@@ -13,11 +13,12 @@ function ProfileCompo() {
     useEffect(() => {
         if (!cookies.jwt) {
             navigate("/login")
+        } else {
+            Axios.get(`${userAPI}/userProfile`, { withCredentials: true }).then((response) => {
+                const { fullName, email, image } = response.data
+                setUserData({ fullName, email, image })
+            })
         }
-        Axios.get(`${userAPI}/userProfile`, { withCredentials: true }).then((response) => {
-            const { fullName, email, image } = response.data
-            setUserData({ fullName, email, image })
-        })
     }, [])
 
     return (
@@ -29,13 +30,13 @@ function ProfileCompo() {
                     <span className="name mt-3">{userData.fullName}</span>
                     <span className="idd">{userData.email}</span>
                     <div className=" d-flex mt-2">
-                        <button className="btn1 btn-dark" onClick={()=>navigate('/editprofile')}>Edit Profile</button>
+                        <button className="btn1 btn-dark" onClick={() => navigate('/editprofile')}>Edit Profile</button>
                     </div>
-                    <div className="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
-                        <span><i className="fa fa-twitter"></i></span>
-                        <span><i className="fa fa-facebook-f"></i></span>
-                        <span><i className="fa fa-instagram"></i></span>
-                        <span><i className="fa fa-linkedin"></i></span>
+                    <div className="gap-5 mt-3 icons d-flex flex-row justify-content-center align-items-center">
+                        <span><i className="bi bi-twitter"></i></span>
+                        <span><i className="bi bi-facebook"></i></span>
+                        <span> <i className="bi bi-instagram"></i></span>
+                        <span><i className="bi bi-linkedin"></i></span>
                     </div> <div className=" px-2 rounded mt-4 date ">
                     </div>
                 </div>

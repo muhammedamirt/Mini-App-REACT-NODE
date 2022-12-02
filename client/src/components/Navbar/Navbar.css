@@ -23,3 +23,8 @@ background-color: rgb(9, 79, 9);
     color: #fff;
     background-color: aquamarine;
 }
+.loginSignup{
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}

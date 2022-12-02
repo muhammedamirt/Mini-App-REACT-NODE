@@ -7,18 +7,22 @@ import {useNavigate} from "react-router-dom"
 
 function Signup() {
     const navigate = useNavigate()
+    const [signupVal, setSignupVal] = useState("")
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const handleSignup = () =>{
-        Axios.post(`${userAPI}/register`,{fullName,email,password},{withCredentials:true}).then((response)=>{
-            if(response.data.auth){
-                console.log("helo");
-                navigate('/')
-            }else{
-                navigate('/signup')
-            }
-        })
+        if(fullName !== "" && email !== "" && password !==""){
+            Axios.post(`${userAPI}/register`,{fullName,email,password},{withCredentials:true}).then((response)=>{
+                if(response.data.auth){
+                    navigate('/')
+                }else if(response.data.emailExist){
+                    setSignupVal('Email already Exist..!')
+                }
+            })
+        }else{
+            setSignupVal("complete all forms")
+        }
     }
   return (
     <section className="vh-100">
@@ -49,7 +53,7 @@ function Signup() {
                                         <input className="form-check-input" type="checkbox" value="" id="form1Example3" />
                                         <label className="form-check-label" for="form1Example3"> Remember password </label>
                                     </div>
-
+                                        <p className='signupVal'>{signupVal}</p>
                                     <button className="loginButton" type="button" onClick={handleSignup}>Login</button>
                                 </div>
                             </div>

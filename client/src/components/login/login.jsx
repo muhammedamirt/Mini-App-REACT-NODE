@@ -3,33 +3,32 @@ import { useState } from 'react';
 import './login.css'
 import Axios from 'axios'
 import { userAPI } from '../../API'
-import { AuthContext } from "../../store/authContext"
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie';
+import { AuthContext } from '../../store/authContext';
 
 
 
 
 function Login() {
     const navigate = useNavigate()
+    const {setUser} = useContext(AuthContext)
     const [cookies, setCookie] = useCookies(['jwt']);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const { setUser, setToken } = useContext(AuthContext)
+    const [LoginVal, setLoginVal] = useState("")
     const handleLogin = () => {
         Axios.post(`${userAPI}/login`, { email, password }, { withCredentials: true }).then((response) => {
-            // console.log(response.data);
             if (response.data.auth) {
-                let userData = response.data
-                setUser(userData.fullName)
-                setToken(userData.token)
+                setUser(response.data.fullName)
                 navigate('/')
-            } else {
-                navigate('/login')
+            } else if(response.data.noUser) {
+                setLoginVal("No user found")
+            }else if(response.data.passwordWorng){
+                setLoginVal("password is wrong")
             }
         })
     }
-
     useEffect(() => {
         if (cookies.jwt) {
             navigate("/")
@@ -51,7 +50,7 @@ function Login() {
                                         <input type="email" id="typeEmailX-2" className="form-control form-control-lg" value={email} onChange={(e) => setEmail(e.target.value)} />
                                         <label className="form-label" for="typeEmailX-2">Email</label>
                                     </div>
-
+                                    <p className='loginVal'>{LoginVal}</p>
                                     <div className="form-outline mb-4">
                                         <input type="password" id="typePasswordX-2" className="form-control form-control-lg" value={password} onChange={(e) => setPassword(e.target.value)} />
                                         <label className="form-label" for="typePasswordX-2">Password</label>
